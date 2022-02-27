@@ -57,8 +57,55 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % CONTENT %
+\section{Implementation}
 
+\subsection{Function \texttt{entropy}}
 
+\paragraph{}We are using this mathematical formula: 
+$$ \mathcal{H}(\mathcal{X}) = - \sum_{X_i} P(X_i) \log_2{P(X_i)} $$
+
+\paragraph{}Our implementation is first filtering the negative $P(X_i)$ because 
+the $\log(x)$ function is only defined for \(x \in \left]0, +\infty\right[\).
+Then, it is performing the sum over all $X_i$ using the \texttt{sum} method of the numpy library and return the result according to the above mathematical formula.
+
+\paragraph{}Intuitively, the entropy is measuring the expected amount of information provided when observing an event corresponding to one value of the random variable. The less probable an event is, the more the amount of information provided is when this event occurs.
+
+\subsection{Function \texttt{joint\_entropy}}
+
+\paragraph{}We are using this mathematical formula: 
+$$ \mathcal{H}(\mathcal{X}, \mathcal{Y}) = - \sum_{X_i, Y_j} P(X_i \cap Y_j) \log_2{P(X_i \cap Y_j)} $$
+
+\paragraph{}We notice that this joint entropy is equal to the previously defined entropy taking as argument the joint distribution of the two random variables instead of the marginal distribution of the single random variable.
+
+\paragraph{}It is why we are implementing this function by simply reshaping the joint probability distribution to a one dimensional array. In this way, we can just call the \texttt{entropy} function with this reshaped array as argument.
+
+\subsection{Function \texttt{conditional\_entropy}}
+
+\paragraph{}We are using this mathematical formula which has been demonstrated in the theoretical course:
+$$ \mathcal{H}(\mathcal{X} | \mathcal{Y}) = \mathcal{H}(\mathcal{X} , \mathcal{Y}) - \mathcal{H}(\mathcal{Y}) $$
+
+\paragraph{}Our implementation consists thus in computing the marginal probability distribution $P_\mathcal{Y}$ by marginalizing the joint probability distribution $P_{xy}$ over $\mathcal{X}$. This is done using the \texttt{sum} function of the numpy library using \texttt{axis = 0} as argument. Then, we just compute the result using the above mathematical formula and the previous defined functions.
+
+\paragraph{}An equivalent way to compute this property is to directly use the mathematical formula of the entropy:
+$$ \mathcal{H}(\mathcal{X}, \mathcal{Y}) = - \sum_{X_i, Y_j} P(X_i \cap Y_j) \log_2{P(X_i | Y_j)} $$
+
+\subsection{Function \texttt{mutual\_information}}
+
+\paragraph{}We are using this mathematical formula which has been demonstrated in the theoretical course: 
+$$ \mathcal{I}(\mathcal{X}; \mathcal{Y}) = \mathcal{H}(\mathcal{X}) - \mathcal{H}(\mathcal{X}| \mathcal{Y})$$
+
+\paragraph{}Our implementation consists thus in computing the marginal probability distribution $P_\mathcal{X}$ by marginalizing the joint probability distribution $P_{xy}$ over $\mathcal{Y}$. This is done using the \texttt{sum} function of the numpy library using \texttt{axis = 1} as argument. Then, we just compute the result using the above mathematical formula and the previous defined functions.
+
+\paragraph{}The mutual information between two discrete random variables measures the level of dependence between these random variables. Especially, if $\mathcal{I}(\mathcal{X}; \mathcal{Y}) = 0$, $\mathcal{X}$ and $\mathcal{Y}$ are independent.
+
+\subsection{Functions \texttt{cond\_joint\_entropy} and \texttt{cond\_mutual\_information}}
+
+\paragraph{}We are using these mathematical formulas which have been demonstrated in the theoretical course: 
+$$ \mathcal{H}(\mathcal{X}, \mathcal{Y} | \mathcal{Z}) = \mathcal{H}(\mathcal{X}, \mathcal{Y}, \mathcal{Z}) - \mathcal{H}(\mathcal{Z})$$
+
+$$ \mathcal{I}(\mathcal{X}; \mathcal{Y} | \mathcal{Z}) = \mathcal{H}(\mathcal{X} | \mathcal{Z}) + \mathcal{H}(\mathcal{Y}, \mathcal{Z}) - \mathcal{H}(\mathcal{X}, \mathcal{Y}, \mathcal{Z})$$
+
+\paragraph{}Our implementations consist thus in computing the right marginal probability distributions by marginalizing the joint probability distribution $P_{xyz}$. This is done as in the previous sections using the \texttt{axis} argument of the \texttt{sum} function of the numpy library. Then, we just compute the result using the above mathematical formulas and the previous defined functions.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
