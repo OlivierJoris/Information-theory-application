@@ -107,5 +107,101 @@ $$ \mathcal{I}(\mathcal{X}; \mathcal{Y} | \mathcal{Z}) = \mathcal{H}(\mathcal{X}
 
 \paragraph{}Our implementations consist thus in computing the right marginal probability distributions by marginalizing the joint probability distribution $P_{xyz}$. This is done as in the previous sections using the \texttt{axis} argument of the \texttt{sum} function of the numpy library. Then, we just compute the result using the above mathematical formulas and the previous defined functions.
 
+\section{Weather forecasting}
+
+\subsection{Entropy and cardinality of each variable}
+
+\paragraph{}The corresponding entropy and cardinality of each variable can be observed in the table \ref{table:q6}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+    \textbf{Random variable $\mathcal{X}$} & \textbf{Entropy $\mathcal{H}(\mathcal{X})$} & \textbf{Cardinality} \\ \hline
+    temperature            & 1.511            & 4                    \\ \hline
+    air\_pressure          & 1.000            & 2                    \\ \hline
+    same\_day\_rain        & 1.475            & 3                    \\ \hline
+    next\_day\_rain        & 1.569            & 3                    \\ \hline
+    relative\_humidity     & 1.000            & 2                    \\ \hline
+    wind\_direction        & 2.000            & 4                    \\ \hline
+    wind\_speed            & 1.585            & 3                    \\ \hline
+    cloud\_height          & 1.585            & 3                    \\ \hline
+    cloud\_density         & 1.584            & 3                    \\ \hline
+    month                  & 3.583            & 12                   \\ \hline
+    day                    & 2.806            & 7                    \\ \hline
+    daylight               & 0.999            & 2                    \\ \hline
+    lightning              & 0.325            & 3                    \\ \hline
+    air\_quality           & 0.536            & 3                    \\ \hline
+    \end{tabular}
+    \caption{Entropy $\mathcal{H}(\mathcal{X})$ and cardinality of each random variable $\mathcal{X}$.}
+    \label{table:q6}
+    \end{table}
+
+\paragraph{}We see in this table that the higher the cardinality, the higher the entropy. This can be theoretically justified by the fact that the 
+entropy of a instrument corresponds to the amount of information gained when its value is known. It is why with a larger cardinality the entropy is larger. Indeed,
+the instrument can take more values than with lower cardinalities which implies that the probability of getting a specific value for a variable is smaller thus the entropy is higher.
+
+\subsection{Conditional entropy of \texttt{next\_day\_rain} given each of the other variables}
+
+\paragraph{}The corresponding conditional entropy of each variable with \texttt{next\_day\_rain} can be observed in the table \ref{table:q7}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|}
+    \hline
+    \textbf{Random variable $\mathcal{Y}$} & \textbf{Conditional entropy $\mathcal{H}(\texttt{next\_day\_rain} | \mathcal{Y})$} \\ \hline
+    temperature            & 1.568           \\ \hline
+    air\_pressure          & 0.940          \\ \hline
+    same\_day\_rain        & 1.389          \\ \hline
+    relative\_humidity     & 1.301        \\ \hline
+    wind\_direction        & 1.568            \\ \hline
+    wind\_speed            & 1.568             \\ \hline
+    cloud\_height          & 1.567             \\ \hline
+    cloud\_density         & 1.567            \\ \hline
+    month                  & 1.565           \\ \hline
+    day                    & 1.567           \\ \hline
+    daylight               & 1.568             \\ \hline
+    lightning              & 1.568             \\ \hline
+    air\_quality           & 1.568            \\ \hline
+    \end{tabular}
+    \caption{Conditional entropy $\mathcal{H}(\texttt{next\_day\_rain} | \mathcal{Y})$ with each random variable $\mathcal{Y}$.}
+    \label{table:q7}
+    \end{table}
+
+
+\paragraph{}(a) When the conditioning variable is \texttt{wind\_direction}, the conditional entropy is nearly equal to the entropy of the \texttt{next\_day\_rain} variable without any conditioning.
+It can be explained by the fact that knowing the \texttt{wind\_direction} variable does not really provide any additionnal information on the \texttt{next\_day\_rain} variable which seems intuitively logical.
+
+\paragraph{}(b) When the conditioning variable is \texttt{same\_day\_rain}, the conditional entropy is lower than the entropy of the \texttt{next\_day\_rain} variable without any conditioning.
+It can be explained by the fact that knowing the \texttt{same\_day\_rain} variable provides additionnal information on the \texttt{next\_day\_rain} which seems intuitively logical. The provided amount of information corresponds here to 1.568 - 1.389 = 0.179 bits.
+
+\subsection{Mutual information between two variables} 
+
+\paragraph{}We can deduce that the variables \texttt{relative\_humidity} and \texttt{wind\_speed} are independent because their mutual information is equal to 0. 
+
+\paragraph{}We can deduce that the variables \texttt{month} and \texttt{temperature} are dependent because their mutual information is > 0 (here it is equal to 0.535).
+
+\subsection{Choose a single instrument}
+
+\paragraph{}Based on the mutual information, the variable kept would be \texttt{air\_pressure} because the amount of mutual information between this variable and \texttt{next\_day\_rain} is the highest compared to all the other variables (it is equal to 0.629).
+
+\paragraph{}Based on the conditional entropy, the variable kept would be \texttt{air\_pressure} because the entropy of \texttt{next\_day\_rain} with this variable is the lowest compared to all the other variables (it is equal to 0.940). The variable kept does not change from the one chosen using the mutual information.
+
+\subsection{Deletion of the \texttt{dry} sample of the \texttt{next\_day\_rain} variable from the dataset}
+
+\paragraph{}Based on the mutual information, the variable kept would be \texttt{relative\_humidity} because the amount of mutual information between this variable and \texttt{next\_day\_rain} is the highest compared to all the other variables (it is equal to 0.439).
+
+\paragraph{}Based on the conditional entropy, the variable kept would be \texttt{relative\_humidity} because the entropy of \texttt{next\_day\_rain} with this variable is the lowest compared to all the other variables (it is equal to 0.560). The variable kept does not change from the one chosen using the mutual information.
+
+\paragraph{}If we delete the \texttt{dry} sample of the \texttt{next\_day\_rain} variable, the variable kept becomes the \texttt{relative\_humidity}.
+
+\subsection{Instrument kept if we have a thermometer for free}
+
+\paragraph{}Based on the conditional mutual information, the variable kept would be \texttt{air\_pressure} because the conditional mutual information between this variable, \texttt{next\_day\_rain} and this variable knowing \texttt{temperature} is the highest compared to all the other variables (it is equal to 0.629). This does not change the kept variable according to the question 9.
+
+\paragraph{}Based on the conditional joint entropy, the variable kept would be \texttt{lightning} because the conditional joint entropy of \texttt{next\_day\_rain} and this variable knowing \texttt{temperature} is the lowest compared to all the other variables (it is equal to 1.821). This changes the kept variable according to the question 9.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \end{document}
