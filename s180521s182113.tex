@@ -87,7 +87,7 @@ $$ \mathcal{H}(\mathcal{X} | \mathcal{Y}) = \mathcal{H}(\mathcal{X} , \mathcal{Y
 \paragraph{}Our implementation consists thus in computing the marginal probability distribution $P_\mathcal{Y}$ by marginalizing the joint probability distribution $P_{\mathcal{XY}}$ over $\mathcal{X}$. This is done using the \texttt{sum} function of the numpy library using \texttt{axis = 0} as argument. Then, we just compute the result using the above mathematical formula and the previous defined functions.
 
 \paragraph{}An equivalent way to compute this property is to directly use the mathematical formula of the entropy:
-$$ \mathcal{H}(\mathcal{X} | \mathcal{Y}) = - \sum_{\mathcal{X}_i, \mathcal{Y}_j} P(\mathcal{X}_i \cap \mathcal{Y}_j) \log_2{P(\mathcal{X}_i | \mathcal{Y}_j)} $$
+$$ \mathcal{H}(\mathcal{X} | \mathcal{Y}) = - \sum_{X_i, Y_j} P(X_i \cap Y_j) \log_2{P(X_i | Y_j)} $$
 
 \subsection{Function \texttt{mutual\_information} (question 4)}
 
