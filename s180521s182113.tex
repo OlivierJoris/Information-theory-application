@@ -59,53 +59,215 @@
 % CONTENT %
 \section{Implementation}
 
-\subsection{Function \texttt{entropy}}
+\subsection{Function \texttt{entropy} (question 1)}
 
 \paragraph{}We are using this mathematical formula: 
-$$ \mathcal{H}(\mathcal{X}) = - \sum_{X_i} P(X_i) \log_2{P(X_i)} $$
+$$ \mathcal{H}(\mathcal{X}) = - \sum_{\mathcal{X}_i} P(\mathcal{X}_i) \log_2{P(\mathcal{X}_i)} $$
 
-\paragraph{}Our implementation is first filtering the negative $P(X_i)$ because 
+\paragraph{}Our implementation is first filtering the negatives $P(\mathcal{X}_i)$ because 
 the $\log(x)$ function is only defined for \(x \in \left]0, +\infty\right[\).
-Then, it is performing the sum over all $X_i$ using the \texttt{sum} method of the numpy library and return the result according to the above mathematical formula.
+Then, it is performing the sum over all $\mathcal{X}_i$ using the \texttt{sum} method of the numpy library and return the result according to the above mathematical formula.
 
-\paragraph{}Intuitively, the entropy is measuring the expected amount of information provided when observing an event corresponding to one value of the random variable. The less probable an event is, the more the amount of information provided is when this event occurs.
+\paragraph{}Intuitively, the entropy is measuring the average amount of information provided by a random variable. It is based on the fact that less probable events have less chance to occur but when they occur, they provide a lot of information. In the opposite direction, more probable events provide much less information when they occur.
 
-\subsection{Function \texttt{joint\_entropy}}
+\subsection{Function \texttt{joint\_entropy} (question 2)}
 
 \paragraph{}We are using this mathematical formula: 
-$$ \mathcal{H}(\mathcal{X}, \mathcal{Y}) = - \sum_{X_i, Y_j} P(X_i \cap Y_j) \log_2{P(X_i \cap Y_j)} $$
+$$ \mathcal{H}(\mathcal{X}, \mathcal{Y}) = - \sum_{\mathcal{X}_i, \mathcal{Y}_j} P(\mathcal{X}_i \cap \mathcal{Y}_j) \log_2{P(\mathcal{X}_i \cap \mathcal{Y}_j)} $$
 
-\paragraph{}We notice that this joint entropy is equal to the previously defined entropy taking as argument the joint distribution of the two random variables instead of the marginal distribution of the single random variable.
+\paragraph{}We notice that this joint entropy is equal to the previously defined entropy taking as argument the joint distribution of the two random variables instead of the marginal distributions of the single random variables.
 
 \paragraph{}It is why we are implementing this function by simply reshaping the joint probability distribution to a one dimensional array. In this way, we can just call the \texttt{entropy} function with this reshaped array as argument.
 
-\subsection{Function \texttt{conditional\_entropy}}
+\subsection{Function \texttt{conditional\_entropy} (question 3)}
 
 \paragraph{}We are using this mathematical formula which has been demonstrated in the theoretical course:
 $$ \mathcal{H}(\mathcal{X} | \mathcal{Y}) = \mathcal{H}(\mathcal{X} , \mathcal{Y}) - \mathcal{H}(\mathcal{Y}) $$
 
-\paragraph{}Our implementation consists thus in computing the marginal probability distribution $P_\mathcal{Y}$ by marginalizing the joint probability distribution $P_{xy}$ over $\mathcal{X}$. This is done using the \texttt{sum} function of the numpy library using \texttt{axis = 0} as argument. Then, we just compute the result using the above mathematical formula and the previous defined functions.
+\paragraph{}Our implementation consists thus in computing the marginal probability distribution $P_\mathcal{Y}$ by marginalizing the joint probability distribution $P_{\mathcal{XY}}$ over $\mathcal{X}$. This is done using the \texttt{sum} function of the numpy library using \texttt{axis = 0} as argument. Then, we just compute the result using the above mathematical formula and the previously defined functions.
 
 \paragraph{}An equivalent way to compute this property is to directly use the mathematical formula of the entropy:
 $$ \mathcal{H}(\mathcal{X} | \mathcal{Y}) = - \sum_{X_i, Y_j} P(X_i \cap Y_j) \log_2{P(X_i | Y_j)} $$
 
-\subsection{Function \texttt{mutual\_information}}
+\subsection{Function \texttt{mutual\_information} (question 4)}
 
 \paragraph{}We are using this mathematical formula which has been demonstrated in the theoretical course: 
 $$ \mathcal{I}(\mathcal{X}; \mathcal{Y}) = \mathcal{H}(\mathcal{X}) - \mathcal{H}(\mathcal{X}| \mathcal{Y})$$
 
-\paragraph{}Our implementation consists thus in computing the marginal probability distribution $P_\mathcal{X}$ by marginalizing the joint probability distribution $P_{xy}$ over $\mathcal{Y}$. This is done using the \texttt{sum} function of the numpy library using \texttt{axis = 1} as argument. Then, we just compute the result using the above mathematical formula and the previous defined functions.
+\paragraph{}Our implementation consists thus in computing the marginal probability distribution $P_\mathcal{X}$ by marginalizing the joint probability distribution $P_{xy}$ over $\mathcal{Y}$. This is done using the \texttt{sum} function of the numpy library using \texttt{axis = 1} as argument. Then, we just compute the result using the above mathematical formula and the previously defined functions.
 
 \paragraph{}The mutual information between two discrete random variables measures the level of dependence between these random variables. Especially, if $\mathcal{I}(\mathcal{X}; \mathcal{Y}) = 0$, $\mathcal{X}$ and $\mathcal{Y}$ are independent.
 
-\subsection{Functions \texttt{cond\_joint\_entropy} and \texttt{cond\_mutual\_information}}
+\subsection{Functions \texttt{cond\_joint\_entropy} and \texttt{cond\_mutual\_information} (question 5)}
 
 \paragraph{}We are using these mathematical formulas which have been demonstrated in the theoretical course: 
 $$ \mathcal{H}(\mathcal{X}, \mathcal{Y} | \mathcal{Z}) = \mathcal{H}(\mathcal{X}, \mathcal{Y}, \mathcal{Z}) - \mathcal{H}(\mathcal{Z})$$
 
 $$ \mathcal{I}(\mathcal{X}; \mathcal{Y} | \mathcal{Z}) = \mathcal{H}(\mathcal{X} | \mathcal{Z}) + \mathcal{H}(\mathcal{Y}, \mathcal{Z}) - \mathcal{H}(\mathcal{X}, \mathcal{Y}, \mathcal{Z})$$
 
-\paragraph{}Our implementations consist thus in computing the right marginal probability distributions by marginalizing the joint probability distribution $P_{xyz}$. This is done as in the previous sections using the \texttt{axis} argument of the \texttt{sum} function of the numpy library. Then, we just compute the result using the above mathematical formulas and the previous defined functions.
+\paragraph{}Our implementations consist thus in computing the right marginal probability distributions by marginalizing the joint probability distribution $P_{xyz}$. This is done as in the previous sections using the \texttt{axis} argument of the \texttt{sum} function of the numpy library. Then, we just compute the result using the above mathematical formulas and the previously defined functions.
+
+\section{Weather forecasting}
+
+\subsection{Entropy and cardinality of each variable (question 6)}
+
+\paragraph{}The corresponding entropy and cardinality of each variable can be observed in the table \ref{table:q6}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+    \textbf{Random variable $\mathcal{X}$} & \textbf{Entropy $\mathcal{H}(\mathcal{X})$} & \textbf{Cardinality} \\ \hline
+    temperature            & 1.5113935187            & 4                    \\ \hline
+    air\_pressure          & 0.9999971146             & 2                    \\ \hline
+    same\_day\_rain        & 1.4754687972            & 3                    \\ \hline
+    next\_day\_rain        & 1.5686562064            & 3                    \\ \hline
+    relative\_humidity     & 0.9997963973            & 2                    \\ \hline
+    wind\_direction        & 1.9995507337            & 4                    \\ \hline
+    wind\_speed            & 1.5848180055            & 3                    \\ \hline
+    cloud\_height          & 1.5846220676            & 3                    \\ \hline
+    cloud\_density         & 1.5844638107            & 3                    \\ \hline
+    month                  & 3.5834131971            & 12                   \\ \hline
+    day                    & 2.8063989677            & 7                    \\ \hline
+    daylight               & 0.9986283124            & 2                    \\ \hline
+    lightning              & 0.3249678888            & 3                    \\ \hline
+    air\_quality           & 0.5358803476            & 3                    \\ \hline
+    \end{tabular}
+    \caption{Entropy $\mathcal{H}(\mathcal{X})$ and cardinality of each random variable $\mathcal{X}$.}
+    \label{table:q6}
+    \end{table}
+
+\paragraph{}We see in this table that the higher the cardinality is, the higher the entropy is. This can be theoretically justified by the fact that the 
+entropy of a instrument corresponds to the amount of information gained when its value is known. It is why with a larger cardinality the entropy is larger. Indeed,
+the instrument can take more values than with lower cardinalities which implies that the probability of getting a specific value for a variable is smaller thus the entropy is higher.
+
+\subsection{Conditional entropy of \texttt{next\_day\_rain} given each of the other variables (question 7)}
+
+\paragraph{}The corresponding conditional entropy of each variable with \texttt{next\_day\_rain} can be observed in the table \ref{table:q7}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|}
+    \hline
+    \textbf{Random variable $\mathcal{Y}$} & \textbf{Conditional entropy $\mathcal{H}(\texttt{next\_day\_rain} | \mathcal{Y})$} \\ \hline
+    temperature            & 1.5681010090           \\ \hline
+    air\_pressure          & 0.9399751579          \\ \hline
+    same\_day\_rain        & 1.3894855511          \\ \hline
+    relative\_humidity     & 1.3010552471        \\ \hline
+    wind\_direction        & 1.5678153355            \\ \hline
+    wind\_speed            & 1.5677670878            \\ \hline
+    cloud\_height          & 1.5667630290             \\ \hline
+    cloud\_density         & 1.5665898847            \\ \hline
+    month                  & 1.5648797492           \\ \hline
+    day                    & 1.5671568099          \\ \hline
+    daylight               & 1.5682591877            \\ \hline
+    lightning              & 1.5682325749             \\ \hline
+    air\_quality           & 1.5678811342            \\ \hline
+    \end{tabular}
+    \caption{Conditional entropy $\mathcal{H}(\texttt{next\_day\_rain} | \mathcal{Y})$ with each random variable $\mathcal{Y}$.}
+    \label{table:q7}
+    \end{table}
+
+
+\paragraph{}(a) When the conditioning variable is \texttt{wind\_direction}, the conditional entropy is nearly equal to the entropy of the \texttt{next\_day\_rain} variable without any conditioning.
+It can be explained by the fact that knowing the \texttt{wind\_direction} variable does not really provide any additional information on the \texttt{next\_day\_rain} variable which seems intuitively logical.
+
+\paragraph{}(b) When the conditioning variable is \texttt{same\_day\_rain}, the conditional entropy is lower than the entropy of the \texttt{next\_day\_rain} variable without any conditioning.
+It can be explained by the fact that knowing the \texttt{same\_day\_rain} variable provides additional information on the \texttt{next\_day\_rain} which seems intuitively logical. The provided amount of information corresponds here to 1.5686562064 - 1.3894855511 = 0.1791706553 bits.
+
+\subsection{Mutual information between two variables (question 8)} 
+
+\paragraph{}We can deduce that the variables \texttt{relative\_humidity} and \texttt{wind\_speed} are likely to be independent because their mutual information is nearly equal to 0 (it is equal to 0.0001243960). 
+
+\paragraph{}We can deduce that the variables \texttt{month} and \texttt{temperature} are dependent because their mutual information is > 0 (here it is equal to 0.5753467937).
+
+\subsection{Choose a single instrument (question 9)}
+
+\paragraph{}Based on the mutual information, the variable kept would be \texttt{air\_pressure} because the amount of mutual information between this variable and \texttt{next\_day\_rain} is the highest compared to all the other variables (it is equal to 0.6286810485).
+
+\paragraph{}Based on the conditional entropy, the variable kept would be \texttt{air\_pressure} because the conditional entropy of \texttt{next\_day\_rain} given this variable is the lowest compared to all the other variables (it is equal to 0.9399751579). The variable kept does not change from the one chosen using the mutual information.
+
+\subsection{Deletion of the \texttt{dry} samples of the \texttt{next\_day\_rain} variable from the dataset (question 10)}
+
+\paragraph{}Based on the mutual information, the variable kept would be \texttt{relative\_humidity} because the amount of mutual information between this variable and \texttt{next\_day\_rain} is the highest compared to all the other variables (it is equal to 0.4391920975).
+
+\paragraph{}Based on the conditional entropy, the variable kept would be \texttt{relative\_humidity} because the conditional entropy of \texttt{next\_day\_rain} given this variable is the lowest compared to all the other variables (it is equal to 0.5601193454). The variable kept does not change from the one chosen using the mutual information.
+
+\paragraph{}If we delete the \texttt{dry} samples of the \texttt{next\_day\_rain} variable, the variable kept becomes the \texttt{relative\_humidity}.
+
+\subsection{Instrument kept if we have a thermometer for free (question 11)}
+
+\paragraph{}Based on the conditional mutual information, the variable kept would be \texttt{air\_pressure} because the conditional mutual information between this variable, \texttt{next\_day\_rain} and this variable knowing \texttt{temperature} is the highest compared to all the other variables (it is equal to 0.6294687900). 
+
+\paragraph{}Based on the conditional joint entropy, the variable kept would be \texttt{air\_pressure} because the conditional joint entropy of \texttt{next\_day\_rain} knowing \texttt{temperature} and this variable is the lowest compared to all the other variables (it is equal to 0.9386322190). This has been computed using this formula: 
+$$\mathcal{H}(\mathcal{X} | \mathcal{Y}, \mathcal{Z}) = \mathcal{H}(\mathcal{X}, \mathcal{Y} | \mathcal{Z}) - \mathcal{H}(\mathcal{Y} | \mathcal{Z})$$
+
+\paragraph{}This does not change the kept variable according to the question 9.
+
+\section{Playing with information theory-based strategy}
+
+\subsection{Entropy of one field and one word (question 12)}
+
+\paragraph{}One field can be in 26 states corresponding to the 26 letter of the alphabet, we have $\mathcal{X} \in \{\texttt{a}, \ \texttt{b}, \ \ldots , \ \texttt{z}\}$.
+We have that $P(\mathcal{X} = \texttt{a}) = P(\mathcal{X} = \texttt{b}) = \ldots = P(\mathcal{X} = \texttt{z}) =\frac{1}{26}$ because the letters are equiprobable in this simplified version of the game.
+
+\paragraph{}Now that we have the probability values, we can compute the entropy of each field:
+$$\mathcal{H}(\mathcal{X}) = \sum_{i=1}^{26} \frac{1}{26} \log_2{(26)} = \log_2{(26)} = 4.70043971814 \ bits$$
+
+\paragraph{}For the following questions, let $\mathcal{X}_i$ be a random variable representing the state of of the $i^{th}$ field of the word. The entropy of the whole game (the 5 letters combined) is equal to:
+
+$$\mathcal{H}(\mathcal{X}_1, \mathcal{X}_2, \mathcal{X}_3, \mathcal{X}_4,\mathcal{X}_5) = \sum_{i = 1}^{26^5} \frac{\log_2(26^5)}{26^5} = 23.5021985907 \ bits $$
+
+\paragraph{}Thus, the entropy of the word is equal to the product of the entropy of one field and the world length because $\mathcal{X}_1, \mathcal{X}_2, \mathcal{X}_3, \mathcal{X}_4,$ and $\mathcal{X}_5$ are independent random variables and the entropy is additive. Indeed, here we have that $\mathcal{H}(\mathcal{X}_1, \mathcal{X}_2, \mathcal{X}_3, \mathcal{X}_4,\mathcal{X}_5) = 5 * \mathcal{H}(\mathcal{X}_i)$
+
+\subsection{Entropy and information brought by a first guess using the word \texttt{TABLE} (question 13)}
+
+\paragraph{}We have that the entropy of a random variable $\mathcal{X}$ representing a gray field of the word \texttt{TABLE} is equal to:
+$$\mathcal{H}(\mathcal{X}) = \sum_{i=1}^{22} \frac{1}{22} \log_2{(22)} = \log_2{(22)} = 4.45943161864 \ bits $$
+\paragraph{}Because we know that 4 letters cannot be part of the word\footnote{\texttt{T}, \texttt{B}, \texttt{L}, and \texttt{E}.}.
+
+\paragraph{}The entropy of the green field of the word \texttt{TABLE} is equal to 0 because there is no more uncertainty about it.
+
+\paragraph{}The entropy of the game is equal to:
+$$\mathcal{H}(\mathcal{X}_1, \mathcal{X}_2, \mathcal{X}_3, \mathcal{X}_4,\mathcal{X}_5) = \sum_{i = 1}^{22^4} \frac{\log_2(22^4)}{22^4} = \mathcal{H}(\mathcal{X}_1) + \mathcal{H}(\mathcal{X}_3) + \mathcal{H}(\mathcal{X}_4) + \mathcal{H}(\mathcal{X}_5) = 17.8377264745 \ bits$$
+
+\paragraph{}The information that this guess has brought is equal to:
+
+$$I(\texttt{TABLE}) = \log_2{(26}) + 4 \left(\log_2{(26)} - \log_2(22)\right) = 5.66447211616 \ bits$$
+
+\paragraph{}Because we know that there is an \texttt{A} in the word and we also know that four letters are not part of the word. It also corresponds to the difference between the initial entropy and the entropy after the first guess of the game. 
+
+\subsection{Entropy after a second guess using the word \texttt{ROUGH} (question 14)}
+
+\paragraph{}We have that the entropy of a random variable $\mathcal{X}$ representing a gray field\footnote{A field containing a \texttt{R}, \texttt{O}, \texttt{U}, or \texttt{H}.} of the word \texttt{ROUGH} at this stage of the game is equal to:
+$$ \mathcal{H}(\mathcal{X}) = \sum_{i=1}^{18} \frac{1}{18} \log_2{(18)} = 4.16992500144\ bits $$
+\paragraph{}Because we know that there are 8 letters that can not be part of the word according to the previous and actual guesses.
+
+\paragraph{}We have that the entropy of a random variable  $\mathcal{Y}$ representing the orange field\footnote{The field containing the letter \texttt{G}.} of the word \texttt{ROUGH} at this stage of the game is equal to:
+$$ \mathcal{H}(\mathcal{Y}) = \sum_{i=1}^{17} \frac{1}{17} \log_2{(17)} = 4.08746284125 \ bits $$
+\paragraph{}Because we know that there are 9 letters that can not be part of the word according to the previous and actual guesses.
+
+\paragraph{}The entropy of the game at this stage is equal to:
+$$\mathcal{H}(\mathcal{X}_1, \mathcal{X}_2, \mathcal{X}_3, \mathcal{X}_4,\mathcal{X}_5) = \frac{3}{4} \sum_{i=1}^{18^4} \frac{1}{18^4} \log_2{(18^4)} + \frac{1}{4} \log_2{(1)} + \sum_{i=1}^{17} \frac{1}{17} \log_2{(17)} = 16.5972378456 \ bits$$
+\paragraph{}Because we have $\frac{1}{4}$ that the \texttt{G} is the right letter of the field and if it is, there is no more uncertainty about the cell. If \texttt{G} is not the right letter of the field\footnote{It has a probability of $1 - \frac{1}{4} = \frac{3}{4}$}, we have $\frac{1}{18}$ chance to have the right letter taking into account the gray fields of the actual and previous guesses.
+
+\paragraph{}The entropy of the game and each field are linked by this equation:
+$$\mathcal{H}(\mathcal{X}_1, \mathcal{X}_2, \mathcal{X}_3, \mathcal{X}_4,\mathcal{X}_5) < 4 * {H}(\mathcal{X}) + \mathcal{H}(\mathcal{Y}) $$
+\paragraph{}It is because $\mathcal{X}_1, \mathcal{X}_2, \mathcal{X}_3,$ and $\mathcal{X}_5,$ are dependent of $\mathcal{X}_4$. Indeed, because the fourth letter is orange, we have additional information about the probability of the other variables.
+
+\subsection{Entropy of the real game compared to the simplified version (question 15)}
+
+\paragraph{}The entropy of the real game will be lower than this simplified version because the set of possible words is only composed of 2000 words while there were $26^5$ words in the simplified version. Thus, the probability that a given word is the right one will be higher and the entropy lower than in the simplified version. 
+The probability of each letter are not yet equiprobable because they follow the English distribution thus a not frequent letter like \texttt{Z} will give a lot of information about the word if present unlike vowels like \texttt{A} and \texttt{E}.
+
+\paragraph{}However, in the simplified version we can make guesses that are not existing words which allows to have a maximal entropy reduction at each guess unlike in the simplified version of the game.
+
+\paragraph{}Finally, in the real game, if we repeat multiple time a letter, we have different result than in this simplified version. For example, if we propose the word \texttt{ABCDD} and the word that we gave to guess is \texttt{ABCDE}, the real game will color the last letter in gray while the simplified version will color it in orange according to its rules. This difference makes that entropy might not represents the true uncertainty about the game in the simplified version while it is more accurate in the real game.
+
+\subsection{Approach based on information theory to solve the real game in a minimum number of guesses (question 16)}
+
+\paragraph{}To solve the game at each step, we would consider the entropies of all the possible words that we can propose in order to make a guess that maximize the entropy reduction for the next guess. This can be done by computing a tree and follow the path maximizing this entropy reduction.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \end{document}
