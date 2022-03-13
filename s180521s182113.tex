@@ -239,21 +239,26 @@ $$I(\texttt{TABLE}) = \log_2{(26}) + 4 \left(\log_2{(26)} - \log_2(22)\right) = 
 
 \subsection{Entropy after a second guess using the word \texttt{ROUGH} (question 14)}
 
-\paragraph{}We have that the entropy of a random variable $\mathcal{X}$ representing a gray field\footnote{A field containing a \texttt{R}, \texttt{O}, \texttt{U}, or \texttt{H}.} of the word \texttt{ROUGH} at this stage of the game is equal to:
-$$ \mathcal{H}(\mathcal{X}) = \sum_{i=1}^{18} \frac{1}{18} \log_2{(18)} = 4.16992500144\ bits $$
-\paragraph{}Because we know that there are 8 letters that can not be part of the word according to the previous and actual guesses.
+\paragraph{}We have that the entropy of a random variable $\mathcal{X}$ representing a gray field for which the entropy is unknown\footnote{A field containing a \texttt{R}, \texttt{U}, or \texttt{H}.} of the word \texttt{ROUGH} at this stage of the game is equal to:
+$$ \mathcal{H}(\mathcal{X}) = \sum_{i=1}^{17} 0.0380848 \ * \ (- \log_2{(0.0380848)}) \ + \ 0.352557 \ * \ (- \log_2{(0.3525571)}) = 3.5827297607\ bits $$
+\paragraph{}The probability distribution of the letter has been computed in the last cell of our Jupyter Notebook \texttt{s180521s182113.ipynb}. The idea behind this computation is that the letters are no more uniformly distributed because of the two guesses. Some letters which have been showed as 
+gray have a probability of 0 to be in each cell and the letter \texttt{G} has a higher probability than the remaining letters because it is colored in orange in the second guess.
 
 \paragraph{}We have that the entropy of a random variable  $\mathcal{Y}$ representing the orange field\footnote{The field containing the letter \texttt{G}.} of the word \texttt{ROUGH} at this stage of the game is equal to:
 $$ \mathcal{H}(\mathcal{Y}) = \sum_{i=1}^{17} \frac{1}{17} \log_2{(17)} = 4.08746284125 \ bits $$
-\paragraph{}Because we know that there are 9 letters that can not be part of the word according to the previous and actual guesses.
+\paragraph{}Because we know that there are 9 letters that can not be part of this cell according to the previous and actual guesses.
 
 \paragraph{}The entropy of the game at this stage is equal to:
-$$\mathcal{H}(\mathcal{X}_1, \mathcal{X}_2, \mathcal{X}_3, \mathcal{X}_4,\mathcal{X}_5) = \frac{3}{4} \sum_{i=1}^{18^4} \frac{1}{18^4} \log_2{(18^4)} + \frac{1}{4} \log_2{(1)} + \sum_{i=1}^{17} \frac{1}{17} \log_2{(17)} = 16.5972378456 \ bits$$
-\paragraph{}Because we have $\frac{1}{4}$ that the \texttt{G} is the right letter of the field and if it is, there is no more uncertainty about the cell. If \texttt{G} is not the right letter of the field\footnote{It has a probability of $1 - \frac{1}{4} = \frac{3}{4}$}, we have $\frac{1}{18}$ chance to have the right letter taking into account the gray fields of the actual and previous guesses.
+$$\mathcal{H}(\mathcal{X}_1, \mathcal{X}_2, \mathcal{X}_3, \mathcal{X}_4,\mathcal{X}_5) = \sum_{i=1}^{15623} \frac{1}{15623} \log_2{(15623)} = 13.9313838925 \ bits$$
+\paragraph{}The 15623 value corresponds to the amount of remaining possible words taking into account our two guesses. We computed this value in the last cell of our Jupyter Notebook \texttt{s180521s182113.ipynb}.
 
 \paragraph{}The entropy of the game and each field are linked by this equation:
-$$\mathcal{H}(\mathcal{X}_1, \mathcal{X}_2, \mathcal{X}_3, \mathcal{X}_4,\mathcal{X}_5) < 4 * {H}(\mathcal{X}) + \mathcal{H}(\mathcal{Y}) $$
-\paragraph{}It is because $\mathcal{X}_1, \mathcal{X}_2, \mathcal{X}_3,$ and $\mathcal{X}_5,$ are dependent of $\mathcal{X}_4$. Indeed, because the fourth letter is orange, we have additional information about the probability of the other variables.
+\begin{align*}
+    \mathcal{H}(\mathcal{X}_1, \mathcal{X}_2, \mathcal{X}_3, \mathcal{X}_4,\mathcal{X}_5) &< 3 * {H}(\mathcal{X}) + \mathcal{H}(\mathcal{Y}) \\
+                                                                            13.9313838925 &< 3 * 3.5827297607 + 4.08746284125 \\
+                                                                            13.9313838925 &< 14.8356521235
+\end{align*}
+\paragraph{}It is because $\mathcal{X}_1, \mathcal{X}_3,$, $\mathcal{X}_4,$ and $\mathcal{X}_5$ are now dependent random variables. Indeed, because the fourth letter is orange, we have additional information about the possible remaining words that we did not take into account when considering the fields individually.
 
 \subsection{Entropy of the real game compared to the simplified version (question 15)}
 
@@ -266,7 +271,7 @@ The probability of each letter are not yet equiprobable because they follow the 
 
 \subsection{Approach based on information theory to solve the real game in a minimum number of guesses (question 16)}
 
-\paragraph{}To solve the game at each step, we would consider the entropies of all the possible words that we can propose in order to make a guess that maximize the entropy reduction for the next guess. This can be done by computing a tree and follow the path maximizing this entropy reduction.
+\paragraph{}To solve the game at each step, we would consider the entropies of all the possible words that we can propose in order to make a guess that maximize the entropy reduction for the next guess. This can be done by computing a tree and follow the path maximizing this entropy reduction at each node of the tree.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
